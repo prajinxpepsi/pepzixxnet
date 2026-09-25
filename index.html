@@ -1,442 +1,1024 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NorCal Cubers</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NorCal Cubers</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f7f7f5;
-      color: #171717;
-      padding: 30px;
-    }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f6f6f3;
+  color: #171717;
+  padding: 28px;
+}
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-    }
+.container {
+  max-width: 950px;
+  margin: auto;
+}
 
-    /* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 45px;
+}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 55px;
-    }
+.logo {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
 
-    .logo {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
+.logo span {
+  color: #999;
+}
 
-    .logo span {
-      color: #777;
-    }
+.status {
+  font-size: 12px;
+  background: #eaf7e5;
+  color: #4b9141;
+  padding: 7px 11px;
+  border-radius: 20px;
+  font-weight: 600;
+}
 
-    .status {
-      font-size: 13px;
-      background: #e9f8df;
-      color: #43802d;
-      padding: 7px 11px;
-      border-radius: 20px;
-      font-weight: 600;
-    }
+.hero {
+  margin-bottom: 35px;
+}
 
-    /* HERO */
+.hero small {
+  color: #999;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
 
-    .hero {
-      margin-bottom: 45px;
-    }
+.hero h1 {
+  font-size: clamp(45px, 7vw, 72px);
+  letter-spacing: -5px;
+  line-height: .95;
+  margin: 9px 0 15px;
+}
 
-    .hero small {
-      color: #888;
-      font-size: 13px;
-    }
+.hero h1 span {
+  color: #999;
+}
 
-    .hero h1 {
-      font-size: clamp(48px, 8vw, 82px);
-      letter-spacing: -5px;
-      line-height: .9;
-      margin: 10px 0 20px;
-    }
+.hero p {
+  color: #777;
+  max-width: 530px;
+  font-size: 14px;
+  line-height: 1.6;
+}
 
-    .hero h1 span {
-      color: #777;
-    }
+/* TIMER */
 
-    .hero p {
-      color: #777;
-      max-width: 500px;
-      line-height: 1.6;
-      font-size: 15px;
-    }
+.timer-card {
+  background: #171717;
+  color: white;
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 15px;
+}
 
-    /* PROFILE */
+.timer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .profile {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
+.timer-label {
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 10px;
+}
 
-    .card {
-      background: white;
-      border: 1px solid #e8e8e5;
-      border-radius: 18px;
-      padding: 24px;
-    }
+.timer-event {
+  color: #aaa;
+  font-size: 11px;
+  background: #252525;
+  padding: 6px 9px;
+  border-radius: 7px;
+}
 
-    .card-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #999;
-      margin-bottom: 15px;
-    }
+.timer {
+  text-align: center;
+  font-size: clamp(65px, 12vw, 105px);
+  font-weight: 700;
+  letter-spacing: -5px;
+  margin: 25px 0 12px;
+  font-variant-numeric: tabular-nums;
+}
 
-    .big-number {
-      font-size: 42px;
-      font-weight: 800;
-      letter-spacing: -2px;
-    }
+.timer-hint {
+  text-align: center;
+  color: #777;
+  font-size: 11px;
+}
 
-    .sub {
-      color: #999;
-      font-size: 13px;
-      margin-top: 5px;
-    }
+.timer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
 
-    /* MINI CUBE */
+button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
 
-    .cube-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      overflow: hidden;
-    }
+.timer-btn {
+  background: #292929;
+  color: white;
+  padding: 9px 15px;
+  border-radius: 8px;
+  font-size: 12px;
+}
 
-    .cube {
-      width: 75px;
-      height: 75px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
-      transform: rotate(-8deg);
-    }
+.timer-btn:hover {
+  background: #363636;
+}
 
-    .cube div {
-      border-radius: 4px;
-      background: #ddd;
-    }
+/* GRID */
 
-    .cube div:nth-child(1),
-    .cube div:nth-child(5),
-    .cube div:nth-child(9) {
-      background: #ff5959;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
 
-    .cube div:nth-child(2),
-    .cube div:nth-child(6) {
-      background: #ffd84d;
-    }
+.card {
+  background: white;
+  border: 1px solid #e7e7e3;
+  border-radius: 18px;
+  padding: 23px;
+}
 
-    .cube div:nth-child(3),
-    .cube div:nth-child(7) {
-      background: #5c8cff;
-    }
+.label {
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 10px;
+  margin-bottom: 14px;
+}
 
-    .cube div:nth-child(4),
-    .cube div:nth-child(8) {
-      background: #5bd68a;
-    }
+/* SCRAMBLE */
 
-    /* LEADERBOARD */
+.scramble {
+  font-family: monospace;
+  font-size: 17px;
+  line-height: 1.6;
+  min-height: 58px;
+}
 
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 45px 0 15px;
-    }
+.new-scramble {
+  margin-top: 15px;
+  background: #171717;
+  color: white;
+  padding: 9px 13px;
+  border-radius: 8px;
+  font-size: 12px;
+}
 
-    .section-title h2 {
-      font-size: 18px;
-      letter-spacing: -0.5px;
-    }
+/* STATS */
 
-    .section-title span {
-      color: #999;
-      font-size: 12px;
-    }
+.session-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
 
-    .leaderboard {
-      background: white;
-      border: 1px solid #e8e8e5;
-      border-radius: 18px;
-      overflow: hidden;
-    }
+.session-box {
+  background: #f5f5f2;
+  border-radius: 11px;
+  padding: 14px;
+}
 
-    .person {
-      display: grid;
-      grid-template-columns: 45px 1fr 100px;
-      align-items: center;
-      padding: 17px 22px;
-      border-bottom: 1px solid #eee;
-    }
+.session-box strong {
+  display: block;
+  font-size: 23px;
+  letter-spacing: -1px;
+}
 
-    .person:last-child {
-      border-bottom: none;
-    }
+.session-box span {
+  color: #999;
+  font-size: 10px;
+}
 
-    .rank {
-      color: #999;
-      font-size: 13px;
-    }
+/* SOLVES */
 
-    .name {
-      font-weight: 700;
-    }
+.solves {
+  margin-top: 15px;
+}
 
-    .username {
-      color: #aaa;
-      font-size: 12px;
-      margin-top: 3px;
-    }
+.solve {
+  display: flex;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
+}
 
-    .time {
-      text-align: right;
-      font-weight: 800;
-      font-size: 15px;
-    }
+.solve:last-child {
+  border-bottom: none;
+}
 
-    .pb {
-      color: #4b9c5e;
-      font-size: 10px;
-      font-weight: 600;
-      margin-left: 5px;
-    }
+.solve-number {
+  color: #aaa;
+  margin-right: 10px;
+}
 
-    /* FUN FACT */
+.solve-time {
+  font-weight: 700;
+}
 
-    .fun {
-      margin-top: 15px;
-      background: #171717;
-      color: white;
-      border-radius: 18px;
-      padding: 25px;
-    }
+.delete {
+  color: #aaa;
+  background: none;
+  margin-left: 10px;
+}
 
-    .fun small {
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 10px;
-    }
+/* TOOLS */
 
-    .fun h3 {
-      margin-top: 10px;
-      font-size: 22px;
-    }
+.section-title {
+  margin: 45px 0 15px;
+}
 
-    .fun p {
-      color: #aaa;
-      margin-top: 7px;
-      font-size: 13px;
-    }
+.section-title h2 {
+  font-size: 18px;
+}
 
-    /* FOOTER */
+.tools {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
 
-    footer {
-      text-align: center;
-      color: #aaa;
-      font-size: 11px;
-      margin: 50px 0 10px;
-    }
+.tool {
+  background: white;
+  border: 1px solid #e7e7e3;
+  border-radius: 14px;
+  padding: 18px;
+  text-decoration: none;
+  color: #171717;
+  transition: .15s;
+}
 
-    /* MOBILE */
+.tool:hover {
+  transform: translateY(-2px);
+  border-color: #ccc;
+}
 
-    @media (max-width: 600px) {
-      body {
-        padding: 20px;
-      }
+.tool-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
 
-      header {
-        margin-bottom: 40px;
-      }
+.tool strong {
+  font-size: 13px;
+  display: block;
+}
 
-      .profile {
-        grid-template-columns: 1fr;
-      }
+.tool span {
+  color: #999;
+  font-size: 10px;
+  display: block;
+  margin-top: 4px;
+}
 
-      .hero h1 {
-        letter-spacing: -3px;
-      }
-    }
-  </style>
+.fun {
+  background: #ecebe7;
+  border-radius: 18px;
+  padding: 23px;
+  margin-top: 15px;
+}
+
+.fun h3 {
+  font-size: 20px;
+}
+
+.fun p {
+  color: #777;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+footer {
+  text-align: center;
+  color: #aaa;
+  font-size: 10px;
+  margin: 40px 0 10px;
+}
+
+@media (max-width: 650px) {
+  body {
+    padding: 18px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tools {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero h1 {
+    letter-spacing: -3px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <header>
-      <div class="logo">
-        NorCal <span>Cubers</span>
-      </div>
+<header>
+  <div class="logo">
+    NorCal <span>Cubers</span>
+  </div>
 
-      <div class="status">
-        ● probably cubing
-      </div>
-    </header>
-
-
-    <section class="hero">
-      <small>THE VERY OFFICIAL™ WEBSITE</small>
-
-      <h1>
-        Cube.<br>
-        <span>Turn. Repeat.</span>
-      </h1>
-
-      <p>
-        A completely unnecessary website for people in NorCal
-        who spend way too much time solving colorful plastic cubes.
-      </p>
-    </section>
+  <div class="status">
+    ● cube mode
+  </div>
+</header>
 
 
-    <!-- QUICK STATS -->
+<section class="hero">
 
-    <div class="profile">
+  <small>THE VERY OFFICIAL™ CUBING DASHBOARD</small>
 
-      <div class="card">
-        <div class="card-label">Current obsession</div>
-        <div class="big-number">3×3</div>
-        <div class="sub">because obviously</div>
-      </div>
+  <h1>
+    Solve.<br>
+    <span>Don't think.</span>
+  </h1>
 
-      <div class="card cube-card">
-        <div>
-          <div class="card-label">Cube status</div>
-          <div class="big-number">SCRAMBLED</div>
-          <div class="sub">as it should be</div>
-        </div>
+  <p>
+    Scramble, solve, track your times, and see how fast
+    you're actually getting.
+  </p>
 
-        <div class="cube">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
+</section>
 
+
+<!-- TIMER -->
+
+<div class="timer-card">
+
+  <div class="timer-top">
+
+    <div class="timer-label">
+      Speed Timer
     </div>
 
-
-    <!-- LEADERBOARD -->
-
-    <div class="section-title">
-      <h2>NorCal leaderboard</h2>
-      <span>trust me bro</span>
+    <div class="timer-event">
+      3 × 3
     </div>
-
-    <div class="leaderboard">
-
-      <div class="person">
-        <div class="rank">01</div>
-
-        <div>
-          <div class="name">Prajin</div>
-          <div class="username">@definitelysub10</div>
-        </div>
-
-        <div class="time">
-          8.42s <span class="pb">PB</span>
-        </div>
-      </div>
-
-
-      <div class="person">
-        <div class="rank">02</div>
-
-        <div>
-          <div class="name">Steven</div>
-          <div class="username">@turningfast</div>
-        </div>
-
-        <div class="time">
-          9.17s
-        </div>
-      </div>
-
-
-      <div class="person">
-        <div class="rank">03</div>
-
-        <div>
-          <div class="name">Alex</div>
-          <div class="username">@algorithms</div>
-        </div>
-
-        <div class="time">
-          10.03s
-        </div>
-      </div>
-
-
-      <div class="person">
-        <div class="rank">04</div>
-
-        <div>
-          <div class="name">You?</div>
-          <div class="username">@futurecubinglegend</div>
-        </div>
-
-        <div class="time">
-          --:--
-        </div>
-      </div>
-
-    </div>
-
-
-    <!-- FUN CARD -->
-
-    <div class="fun">
-      <small>important information</small>
-
-      <h3>
-        Your cube is judging you.
-      </h3>
-
-      <p>
-        Go solve it. You know you want to.
-      </p>
-    </div>
-
-
-    <footer>
-      NorCal Cubers · Made for absolutely no reason
-    </footer>
 
   </div>
+
+  <div class="timer" id="timer">
+    0.00
+  </div>
+
+  <div class="timer-hint">
+    Press SPACE to start / stop
+  </div>
+
+  <div class="timer-buttons">
+
+    <button class="timer-btn" id="startBtn">
+      Start
+    </button>
+
+    <button class="timer-btn" id="stopBtn">
+      Stop
+    </button>
+
+    <button class="timer-btn" id="resetBtn">
+      Reset
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- SCRAMBLE + STATS -->
+
+<div class="grid">
+
+  <div class="card">
+
+    <div class="label">
+      Current Scramble
+    </div>
+
+    <div class="scramble" id="scramble"></div>
+
+    <button class="new-scramble" id="scrambleBtn">
+      New Scramble ↻
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      Session Statistics
+    </div>
+
+    <div class="session-stats">
+
+      <div class="session-box">
+        <strong id="solveCount">0</strong>
+        <span>Solves</span>
+      </div>
+
+      <div class="session-box">
+        <strong id="average">--</strong>
+        <span>Average</span>
+      </div>
+
+      <div class="session-box">
+        <strong id="best">--</strong>
+        <span>Best</span>
+      </div>
+
+      <div class="session-box">
+        <strong id="ao5">--</strong>
+        <span>Ao5</span>
+      </div>
+
+      <div class="session-box">
+        <strong id="ao12">--</strong>
+        <span>Ao12</span>
+      </div>
+
+      <div class="session-box">
+        <strong id="worst">--</strong>
+        <span>Worst</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- SOLVES -->
+
+<div class="card solves">
+
+  <div class="label">
+    Recent Solves
+  </div>
+
+  <div id="solveList">
+    <div style="color:#aaa;font-size:12px;">
+      No solves yet. Go cook. 🫡
+    </div>
+  </div>
+
+</div>
+
+
+<!-- TOOLS -->
+
+<div class="section-title">
+  <h2>Cubing Tools</h2>
+</div>
+
+<div class="tools">
+
+  <a class="tool" href="#" id="toolScramble">
+    <div class="tool-icon">🔀</div>
+    <strong>Scrambler</strong>
+    <span>New scramble</span>
+  </a>
+
+  <a class="tool" href="#" id="toolClear">
+    <div class="tool-icon">🗑️</div>
+    <strong>Clear Session</strong>
+    <span>Delete solves</span>
+  </a>
+
+  <a class="tool" href="#">
+    <div class="tool-icon">📊</div>
+    <strong>Statistics</strong>
+    <span>You're looking at them</span>
+  </a>
+
+  <a class="tool" href="#">
+    <div class="tool-icon">🧠</div>
+    <strong>Algorithms</strong>
+    <span>Coming soon</span>
+  </a>
+
+</div>
+
+
+<div class="fun">
+
+  <h3>
+    Your cube is probably judging you.
+  </h3>
+
+  <p>
+    Keep solving. The PB isn't going to get itself.
+  </p>
+
+</div>
+
+
+<footer>
+  NorCal Cubers · Made for absolutely no reason
+</footer>
+
+</div>
+
+
+<script>
+
+/* =========================
+   TIMER
+========================= */
+
+let startTime = null;
+let timerInterval = null;
+let running = false;
+
+const timerDisplay =
+  document.getElementById("timer");
+
+
+function formatTime(seconds) {
+
+  return seconds.toFixed(2);
+
+}
+
+
+function startTimer() {
+
+  if (running) return;
+
+  startTime = performance.now();
+  running = true;
+
+  timerInterval = setInterval(() => {
+
+    const elapsed =
+      (performance.now() - startTime) / 1000;
+
+    timerDisplay.textContent =
+      formatTime(elapsed);
+
+  }, 10);
+
+}
+
+
+function stopTimer() {
+
+  if (!running) return;
+
+  clearInterval(timerInterval);
+
+  const finalTime =
+    (performance.now() - startTime) / 1000;
+
+  running = false;
+
+  timerDisplay.textContent =
+    formatTime(finalTime);
+
+  addSolve(finalTime);
+
+}
+
+
+function resetTimer() {
+
+  clearInterval(timerInterval);
+
+  running = false;
+
+  timerDisplay.textContent =
+    "0.00";
+
+}
+
+
+/* BUTTONS */
+
+document
+  .getElementById("startBtn")
+  .addEventListener("click", startTimer);
+
+document
+  .getElementById("stopBtn")
+  .addEventListener("click", stopTimer);
+
+document
+  .getElementById("resetBtn")
+  .addEventListener("click", resetTimer);
+
+
+/* SPACE BAR */
+
+document.addEventListener("keydown", event => {
+
+  if (
+    event.code === "Space" &&
+    event.target.tagName !== "INPUT"
+  ) {
+
+    event.preventDefault();
+
+    if (running) {
+      stopTimer();
+    } else {
+      startTimer();
+    }
+
+  }
+
+});
+
+
+/* =========================
+   SCRAMBLE GENERATOR
+========================= */
+
+const moves = [
+  "R", "L", "U", "D", "F", "B"
+];
+
+const modifiers = [
+  "", "'", "2"
+];
+
+
+function newScramble() {
+
+  let scramble = [];
+  let previous = "";
+
+  for (let i = 0; i < 20; i++) {
+
+    let move;
+
+    do {
+
+      move =
+        moves[
+          Math.floor(
+            Math.random() * moves.length
+          )
+        ];
+
+    } while (move === previous);
+
+    const modifier =
+      modifiers[
+        Math.floor(
+          Math.random() * modifiers.length
+        )
+      ];
+
+    scramble.push(move + modifier);
+
+    previous = move;
+
+  }
+
+  document
+    .getElementById("scramble")
+    .textContent =
+    scramble.join(" ");
+
+}
+
+
+document
+  .getElementById("scrambleBtn")
+  .addEventListener(
+    "click",
+    newScramble
+  );
+
+document
+  .getElementById("toolScramble")
+  .addEventListener("click", event => {
+
+    event.preventDefault();
+
+    newScramble();
+
+  });
+
+
+/* =========================
+   SESSION
+========================= */
+
+let solves = [];
+
+
+function addSolve(time) {
+
+  solves.unshift(time);
+
+  updateStats();
+
+}
+
+
+function calculateAverage(times) {
+
+  if (!times.length) {
+    return null;
+  }
+
+  const total =
+    times.reduce(
+      (sum, value) => sum + value,
+      0
+    );
+
+  return total / times.length;
+
+}
+
+
+/* =========================
+   AO5 / AO12
+========================= */
+
+function calculateAverageOf(times, count) {
+
+  if (times.length < count) {
+    return null;
+  }
+
+  const recent =
+    times.slice(0, count);
+
+  /*
+    Official-style simple average:
+    remove fastest + slowest
+    then average the rest
+  */
+
+  const sorted =
+    [...recent].sort(
+      (a, b) => a - b
+    );
+
+  const middle =
+    sorted.slice(1, -1);
+
+  return calculateAverage(middle);
+
+}
+
+
+/* =========================
+   UPDATE EVERYTHING
+========================= */
+
+function updateStats() {
+
+  const count =
+    solves.length;
+
+  document
+    .getElementById("solveCount")
+    .textContent = count;
+
+
+  /* SESSION AVERAGE */
+
+  const average =
+    calculateAverage(solves);
+
+  document
+    .getElementById("average")
+    .textContent =
+    average === null
+      ? "--"
+      : average.toFixed(2);
+
+
+  /* BEST */
+
+  if (count > 0) {
+
+    const best =
+      Math.min(...solves);
+
+    document
+      .getElementById("best")
+      .textContent =
+      best.toFixed(2);
+
+  } else {
+
+    document
+      .getElementById("best")
+      .textContent = "--";
+
+  }
+
+
+  /* WORST */
+
+  if (count > 0) {
+
+    const worst =
+      Math.max(...solves);
+
+    document
+      .getElementById("worst")
+      .textContent =
+      worst.toFixed(2);
+
+  } else {
+
+    document
+      .getElementById("worst")
+      .textContent = "--";
+
+  }
+
+
+  /* AO5 */
+
+  const ao5 =
+    calculateAverageOf(
+      solves,
+      5
+    );
+
+  document
+    .getElementById("ao5")
+    .textContent =
+    ao5 === null
+      ? "--"
+      : ao5.toFixed(2);
+
+
+  /* AO12 */
+
+  const ao12 =
+    calculateAverageOf(
+      solves,
+      12
+    );
+
+  document
+    .getElementById("ao12")
+    .textContent =
+    ao12 === null
+      ? "--"
+      : ao12.toFixed(2);
+
+
+  renderSolves();
+
+}
+
+
+/* =========================
+   SOLVE LIST
+========================= */
+
+function renderSolves() {
+
+  const list =
+    document.getElementById(
+      "solveList"
+    );
+
+  list.innerHTML = "";
+
+
+  if (solves.length === 0) {
+
+    list.innerHTML =
+      `<div style="color:#aaa;font-size:12px;">
+        No solves yet. Go cook. 🫡
+      </div>`;
+
+    return;
+
+  }
+
+
+  solves
+    .slice(0, 10)
+    .forEach((time, index) => {
+
+      const row =
+        document.createElement("div");
+
+      row.className = "solve";
+
+      row.innerHTML = `
+
+        <div>
+          <span class="solve-number">
+            ${index + 1}
+          </span>
+
+          Solve
+        </div>
+
+        <div>
+
+          <span class="solve-time">
+            ${time.toFixed(2)}s
+          </span>
+
+          <button
+            class="delete"
+            data-index="${index}">
+            ×
+          </button>
+
+        </div>
+      `;
+
+      row
+        .querySelector(".delete")
+        .addEventListener(
+          "click",
+          () => {
+
+            solves.splice(
+              index,
+              1
+            );
+
+            updateStats();
+
+          }
+        );
+
+      list.appendChild(row);
+
+    });
+
+}
+
+
+/* =========================
+   CLEAR SESSION
+========================= */
+
+function clearSession(event) {
+
+  if (event) {
+    event.preventDefault();
+  }
+
+  solves = [];
+
+  updateStats();
+
+}
+
+
+document
+  .getElementById("toolClear")
+  .addEventListener(
+    "click",
+    clearSession
+  );
+
+
+/* =========================
+   START WITH SCRAMBLE
+========================= */
+
+newScramble();
+
+</script>
 
 </body>
 </html>
