@@ -1,1025 +1,189 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NorCal Cubers</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NorCal Cubers</title>
 
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f6f6f3;
-  color: #171717;
-  padding: 28px;
-}
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      color: #111;
+    }
 
-.container {
-  max-width: 950px;
-  margin: auto;
-}
+    header {
+      max-width: 1000px;
+      margin: auto;
+      padding: 25px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 45px;
-}
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
 
-.logo {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -1px;
-}
+    nav {
+      display: flex;
+      gap: 22px;
+    }
 
-.logo span {
-  color: #999;
-}
+    nav a {
+      color: #555;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.2s;
+    }
 
-.status {
-  font-size: 12px;
-  background: #eaf7e5;
-  color: #4b9141;
-  padding: 7px 11px;
-  border-radius: 20px;
-  font-weight: 600;
-}
+    nav a:hover {
+      color: #000;
+    }
 
-.hero {
-  margin-bottom: 35px;
-}
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 120px 20px;
+    }
 
-.hero small {
-  color: #999;
-  font-size: 11px;
-  letter-spacing: 1px;
-}
+    .hero {
+      max-width: 650px;
+    }
 
-.hero h1 {
-  font-size: clamp(45px, 7vw, 72px);
-  letter-spacing: -5px;
-  line-height: .95;
-  margin: 9px 0 15px;
-}
+    .hero h1 {
+      font-size: 64px;
+      letter-spacing: -4px;
+      margin-bottom: 15px;
+    }
 
-.hero h1 span {
-  color: #999;
-}
+    .hero p {
+      font-size: 18px;
+      color: #666;
+      line-height: 1.6;
+    }
 
-.hero p {
-  color: #777;
-  max-width: 530px;
-  font-size: 14px;
-  line-height: 1.6;
-}
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 70px;
+    }
 
-/* TIMER */
+    .card {
+      border: 1px solid #e5e5e5;
+      border-radius: 14px;
+      padding: 25px;
+      background: white;
+      text-decoration: none;
+      color: #111;
+      transition: 0.2s;
+    }
 
-.timer-card {
-  background: #171717;
-  color: white;
-  border-radius: 20px;
-  padding: 28px;
-  margin-bottom: 15px;
-}
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #ccc;
+    }
 
-.timer-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
 
-.timer-label {
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 10px;
-}
+    .card p {
+      font-size: 14px;
+      color: #777;
+    }
 
-.timer-event {
-  color: #aaa;
-  font-size: 11px;
-  background: #252525;
-  padding: 6px 9px;
-  border-radius: 7px;
-}
+    footer {
+      max-width: 1000px;
+      margin: auto;
+      padding: 30px 20px;
+      color: #999;
+      font-size: 13px;
+    }
 
-.timer {
-  text-align: center;
-  font-size: clamp(65px, 12vw, 105px);
-  font-weight: 700;
-  letter-spacing: -5px;
-  margin: 25px 0 12px;
-  font-variant-numeric: tabular-nums;
-}
+    @media (max-width: 700px) {
+      header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+      }
 
-.timer-hint {
-  text-align: center;
-  color: #777;
-  font-size: 11px;
-}
+      nav {
+        flex-wrap: wrap;
+      }
 
-.timer-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 22px;
-}
+      main {
+        padding: 80px 20px;
+      }
 
-button {
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-}
+      .hero h1 {
+        font-size: 48px;
+      }
 
-.timer-btn {
-  background: #292929;
-  color: white;
-  padding: 9px 15px;
-  border-radius: 8px;
-  font-size: 12px;
-}
-
-.timer-btn:hover {
-  background: #363636;
-}
-
-/* GRID */
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.card {
-  background: white;
-  border: 1px solid #e7e7e3;
-  border-radius: 18px;
-  padding: 23px;
-}
-
-.label {
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 10px;
-  margin-bottom: 14px;
-}
-
-/* SCRAMBLE */
-
-.scramble {
-  font-family: monospace;
-  font-size: 17px;
-  line-height: 1.6;
-  min-height: 58px;
-}
-
-.new-scramble {
-  margin-top: 15px;
-  background: #171717;
-  color: white;
-  padding: 9px 13px;
-  border-radius: 8px;
-  font-size: 12px;
-}
-
-/* STATS */
-
-.session-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.session-box {
-  background: #f5f5f2;
-  border-radius: 11px;
-  padding: 14px;
-}
-
-.session-box strong {
-  display: block;
-  font-size: 23px;
-  letter-spacing: -1px;
-}
-
-.session-box span {
-  color: #999;
-  font-size: 10px;
-}
-
-/* SOLVES */
-
-.solves {
-  margin-top: 15px;
-}
-
-.solve {
-  display: flex;
-  justify-content: space-between;
-  padding: 11px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 13px;
-}
-
-.solve:last-child {
-  border-bottom: none;
-}
-
-.solve-number {
-  color: #aaa;
-  margin-right: 10px;
-}
-
-.solve-time {
-  font-weight: 700;
-}
-
-.delete {
-  color: #aaa;
-  background: none;
-  margin-left: 10px;
-}
-
-/* TOOLS */
-
-.section-title {
-  margin: 45px 0 15px;
-}
-
-.section-title h2 {
-  font-size: 18px;
-}
-
-.tools {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.tool {
-  background: white;
-  border: 1px solid #e7e7e3;
-  border-radius: 14px;
-  padding: 18px;
-  text-decoration: none;
-  color: #171717;
-  transition: .15s;
-}
-
-.tool:hover {
-  transform: translateY(-2px);
-  border-color: #ccc;
-}
-
-.tool-icon {
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-
-.tool strong {
-  font-size: 13px;
-  display: block;
-}
-
-.tool span {
-  color: #999;
-  font-size: 10px;
-  display: block;
-  margin-top: 4px;
-}
-
-.fun {
-  background: #ecebe7;
-  border-radius: 18px;
-  padding: 23px;
-  margin-top: 15px;
-}
-
-.fun h3 {
-  font-size: 20px;
-}
-
-.fun p {
-  color: #777;
-  font-size: 12px;
-  margin-top: 6px;
-}
-
-footer {
-  text-align: center;
-  color: #aaa;
-  font-size: 10px;
-  margin: 40px 0 10px;
-}
-
-@media (max-width: 650px) {
-  body {
-    padding: 18px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .tools {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .hero h1 {
-    letter-spacing: -3px;
-  }
-}
-</style>
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
-
-<header>
-  <div class="logo">
-    NorCal <span>Cubers</span>
-  </div>
-
-  <div class="status">
-    ● cube mode
-  </div>
-</header>
-
-
-<section class="hero">
-
-  <small>THE VERY OFFICIAL™ CUBING DASHBOARD</small>
-
-  <h1>
-    Solve.<br>
-    <span>Don't think.</span>
-  </h1>
-
-  <p>
-    Scramble, solve, track your times, and see how fast
-    you're actually getting.
-  </p>
-
-</section>
-
-
-<!-- TIMER -->
-
-<div class="timer-card">
-
-  <div class="timer-top">
-
-    <div class="timer-label">
-      Speed Timer
-    </div>
-
-    <div class="timer-event">
-      3 × 3
-    </div>
-
-  </div>
-
-  <div class="timer" id="timer">
-    0.00
-  </div>
-
-  <div class="timer-hint">
-    Press SPACE to start / stop
-  </div>
-
-  <div class="timer-buttons">
-
-    <button class="timer-btn" id="startBtn">
-      Start
-    </button>
-
-    <button class="timer-btn" id="stopBtn">
-      Stop
-    </button>
-
-    <button class="timer-btn" id="resetBtn">
-      Reset
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- SCRAMBLE + STATS -->
-
-<div class="grid">
-
-  <div class="card">
-
-    <div class="label">
-      Current Scramble
-    </div>
-
-    <div class="scramble" id="scramble"></div>
-
-    <button class="new-scramble" id="scrambleBtn">
-      New Scramble ↻
-    </button>
-
-  </div>
-
-
-  <div class="card">
-
-    <div class="label">
-      Session Statistics
-    </div>
-
-    <div class="session-stats">
-
-      <div class="session-box">
-        <strong id="solveCount">0</strong>
-        <span>Solves</span>
-      </div>
-
-      <div class="session-box">
-        <strong id="average">--</strong>
-        <span>Average</span>
-      </div>
-
-      <div class="session-box">
-        <strong id="best">--</strong>
-        <span>Best</span>
-      </div>
-
-      <div class="session-box">
-        <strong id="ao5">--</strong>
-        <span>Ao5</span>
-      </div>
-
-      <div class="session-box">
-        <strong id="ao12">--</strong>
-        <span>Ao12</span>
-      </div>
-
-      <div class="session-box">
-        <strong id="worst">--</strong>
-        <span>Worst</span>
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- SOLVES -->
-
-<div class="card solves">
-
-  <div class="label">
-    Recent Solves
-  </div>
-
-  <div id="solveList">
-    <div style="color:#aaa;font-size:12px;">
-      No solves yet. Go cook. 🫡
-    </div>
-  </div>
-
-</div>
-
-
-<!-- TOOLS -->
-
-<div class="section-title">
-  <h2>Cubing Tools</h2>
-</div>
-
-<div class="tools">
-
-  <a class="tool" href="#" id="toolScramble">
-    <div class="tool-icon">🔀</div>
-    <strong>Scrambler</strong>
-    <span>New scramble</span>
-  </a>
-
-  <a class="tool" href="#" id="toolClear">
-    <div class="tool-icon">🗑️</div>
-    <strong>Clear Session</strong>
-    <span>Delete solves</span>
-  </a>
-
-  <a class="tool" href="#">
-    <div class="tool-icon">📊</div>
-    <strong>Statistics</strong>
-    <span>You're looking at them</span>
-  </a>
-
-  <a class="tool" href="#">
-    <div class="tool-icon">🧠</div>
-    <strong>Algorithms</strong>
-    <span>Coming soon</span>
-  </a>
-
-</div>
-
-
-<div class="fun">
-
-  <h3>
-    Your cube is probably judging you.
-  </h3>
-
-  <p>
-    Keep solving. The PB isn't going to get itself.
-  </p>
-
-</div>
-
-
-<footer>
-  NorCal Cubers · Made for absolutely no reason
-</footer>
-
-</div>
-
-
-<script>
-
-/* =========================
-   TIMER
-========================= */
-
-let startTime = null;
-let timerInterval = null;
-let running = false;
-
-const timerDisplay =
-  document.getElementById("timer");
-
-
-function formatTime(seconds) {
-
-  return seconds.toFixed(2);
-
-}
-
-
-function startTimer() {
-
-  if (running) return;
-
-  startTime = performance.now();
-  running = true;
-
-  timerInterval = setInterval(() => {
-
-    const elapsed =
-      (performance.now() - startTime) / 1000;
-
-    timerDisplay.textContent =
-      formatTime(elapsed);
-
-  }, 10);
-
-}
-
-
-function stopTimer() {
-
-  if (!running) return;
-
-  clearInterval(timerInterval);
-
-  const finalTime =
-    (performance.now() - startTime) / 1000;
-
-  running = false;
-
-  timerDisplay.textContent =
-    formatTime(finalTime);
-
-  addSolve(finalTime);
-
-}
-
-
-function resetTimer() {
-
-  clearInterval(timerInterval);
-
-  running = false;
-
-  timerDisplay.textContent =
-    "0.00";
-
-}
-
-
-/* BUTTONS */
-
-document
-  .getElementById("startBtn")
-  .addEventListener("click", startTimer);
-
-document
-  .getElementById("stopBtn")
-  .addEventListener("click", stopTimer);
-
-document
-  .getElementById("resetBtn")
-  .addEventListener("click", resetTimer);
-
-
-/* SPACE BAR */
-
-document.addEventListener("keydown", event => {
-
-  if (
-    event.code === "Space" &&
-    event.target.tagName !== "INPUT"
-  ) {
-
-    event.preventDefault();
-
-    if (running) {
-      stopTimer();
-    } else {
-      startTimer();
-    }
-
-  }
-
-});
-
-
-/* =========================
-   SCRAMBLE GENERATOR
-========================= */
-
-const moves = [
-  "R", "L", "U", "D", "F", "B"
-];
-
-const modifiers = [
-  "", "'", "2"
-];
-
-
-function newScramble() {
-
-  let scramble = [];
-  let previous = "";
-
-  for (let i = 0; i < 20; i++) {
-
-    let move;
-
-    do {
-
-      move =
-        moves[
-          Math.floor(
-            Math.random() * moves.length
-          )
-        ];
-
-    } while (move === previous);
-
-    const modifier =
-      modifiers[
-        Math.floor(
-          Math.random() * modifiers.length
-        )
-      ];
-
-    scramble.push(move + modifier);
-
-    previous = move;
-
-  }
-
-  document
-    .getElementById("scramble")
-    .textContent =
-    scramble.join(" ");
-
-}
-
-
-document
-  .getElementById("scrambleBtn")
-  .addEventListener(
-    "click",
-    newScramble
-  );
-
-document
-  .getElementById("toolScramble")
-  .addEventListener("click", event => {
-
-    event.preventDefault();
-
-    newScramble();
-
-  });
-
-
-/* =========================
-   SESSION
-========================= */
-
-let solves = [];
-
-
-function addSolve(time) {
-
-  solves.unshift(time);
-
-  updateStats();
-
-}
-
-
-function calculateAverage(times) {
-
-  if (!times.length) {
-    return null;
-  }
-
-  const total =
-    times.reduce(
-      (sum, value) => sum + value,
-      0
-    );
-
-  return total / times.length;
-
-}
-
-
-/* =========================
-   AO5 / AO12
-========================= */
-
-function calculateAverageOf(times, count) {
-
-  if (times.length < count) {
-    return null;
-  }
-
-  const recent =
-    times.slice(0, count);
-
-  /*
-    Official-style simple average:
-    remove fastest + slowest
-    then average the rest
-  */
-
-  const sorted =
-    [...recent].sort(
-      (a, b) => a - b
-    );
-
-  const middle =
-    sorted.slice(1, -1);
-
-  return calculateAverage(middle);
-
-}
-
-
-/* =========================
-   UPDATE EVERYTHING
-========================= */
-
-function updateStats() {
-
-  const count =
-    solves.length;
-
-  document
-    .getElementById("solveCount")
-    .textContent = count;
-
-
-  /* SESSION AVERAGE */
-
-  const average =
-    calculateAverage(solves);
-
-  document
-    .getElementById("average")
-    .textContent =
-    average === null
-      ? "--"
-      : average.toFixed(2);
-
-
-  /* BEST */
-
-  if (count > 0) {
-
-    const best =
-      Math.min(...solves);
-
-    document
-      .getElementById("best")
-      .textContent =
-      best.toFixed(2);
-
-  } else {
-
-    document
-      .getElementById("best")
-      .textContent = "--";
-
-  }
-
-
-  /* WORST */
-
-  if (count > 0) {
-
-    const worst =
-      Math.max(...solves);
-
-    document
-      .getElementById("worst")
-      .textContent =
-      worst.toFixed(2);
-
-  } else {
-
-    document
-      .getElementById("worst")
-      .textContent = "--";
-
-  }
-
-
-  /* AO5 */
-
-  const ao5 =
-    calculateAverageOf(
-      solves,
-      5
-    );
-
-  document
-    .getElementById("ao5")
-    .textContent =
-    ao5 === null
-      ? "--"
-      : ao5.toFixed(2);
-
-
-  /* AO12 */
-
-  const ao12 =
-    calculateAverageOf(
-      solves,
-      12
-    );
-
-  document
-    .getElementById("ao12")
-    .textContent =
-    ao12 === null
-      ? "--"
-      : ao12.toFixed(2);
-
-
-  renderSolves();
-
-}
-
-
-/* =========================
-   SOLVE LIST
-========================= */
-
-function renderSolves() {
-
-  const list =
-    document.getElementById(
-      "solveList"
-    );
-
-  list.innerHTML = "";
-
-
-  if (solves.length === 0) {
-
-    list.innerHTML =
-      `<div style="color:#aaa;font-size:12px;">
-        No solves yet. Go cook. 🫡
-      </div>`;
-
-    return;
-
-  }
-
-
-  solves
-    .slice(0, 10)
-    .forEach((time, index) => {
-
-      const row =
-        document.createElement("div");
-
-      row.className = "solve";
-
-      row.innerHTML = `
-
-        <div>
-          <span class="solve-number">
-            ${index + 1}
-          </span>
-
-          Solve
-        </div>
-
-        <div>
-
-          <span class="solve-time">
-            ${time.toFixed(2)}s
-          </span>
-
-          <button
-            class="delete"
-            data-index="${index}">
-            ×
-          </button>
-
-        </div>
-      `;
-
-      row
-        .querySelector(".delete")
-        .addEventListener(
-          "click",
-          () => {
-
-            solves.splice(
-              index,
-              1
-            );
-
-            updateStats();
-
-          }
-        );
-
-      list.appendChild(row);
-
-    });
-
-}
-
-
-/* =========================
-   CLEAR SESSION
-========================= */
-
-function clearSession(event) {
-
-  if (event) {
-    event.preventDefault();
-  }
-
-  solves = [];
-
-  updateStats();
-
-}
-
-
-document
-  .getElementById("toolClear")
-  .addEventListener(
-    "click",
-    clearSession
-  );
-
-
-/* =========================
-   START WITH SCRAMBLE
-========================= */
-
-newScramble();
-
-</script>
+  <header>
+    <div class="logo">NorCal Cubers</div>
+
+    <nav>
+      <a href="timer.html">Timers</a>
+      <a href="comps.html">Comps</a>
+      <a href="tools.html">Tools</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <h1>NorCal Cubers.</h1>
+      <p>
+        A little place for cubers in Northern California.
+        Timers, scrambles, competitions, and other fun stuff.
+      </p>
+    </section>
+
+    <section class="cards">
+
+      <a href="timer.html" class="card">
+        <h2>⏱ Timer</h2>
+        <p>Time your solves and track your averages.</p>
+      </a>
+
+      <a href="comps.html" class="card">
+        <h2>🏆 Competitions</h2>
+        <p>Find and check out cubing competitions.</p>
+      </a>
+
+      <a href="tools.html" class="card">
+        <h2>🧩 Tools</h2>
+        <p>Random cubing tools and useful stuff.</p>
+      </a>
+
+    </section>
+
+  </main>
+
+  <footer>
+    NorCal Cubers · just for fun
+  </footer>
 
 </body>
 </html>
-```
