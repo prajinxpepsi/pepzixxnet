@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer · NorCal Cubers</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      color: #111;
+    }
+
+    header {
+      max-width: 900px;
+      margin: auto;
+      padding: 25px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    header a {
+      color: #777;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 60px 20px;
+    }
+
+    .timer-section {
+      text-align: center;
+    }
+
+    .scramble {
+      min-height: 50px;
+      font-size: 20px;
+      color: #555;
+      letter-spacing: 1px;
+      margin-bottom: 35px;
+    }
+
+    .timer {
+      font-size: 100px;
+      font-weight: 700;
+      letter-spacing: -5px;
+      margin: 20px 0 30px;
+    }
+
+    button {
+      border: 1px solid #ddd;
+      background: white;
+      padding: 10px 18px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      border-color: #aaa;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .stats {
+      margin-top: 70px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .solves {
+      margin-top: 30px;
+      background: white;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .solves h2 {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .solve {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    .solve:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 700px) {
+      .timer {
+        font-size: 65px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">NorCal Cubers</div>
+    <a href="index.html">← Home</a>
+  </header>
+
+  <main>
+
+    <section class="timer-section">
+
+      <div class="scramble" id="scramble">
+        Click "Scramble" to get started
+      </div>
+
+      <button onclick="generateScramble()">New Scramble</button>
+
+      <div class="timer" id="timer">0.00</div>
+
+      <div class="controls">
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()">Stop</button>
+        <button onclick="resetTimer()">Reset</button>
+      </div>
+
+    </section>
+
+    <section class="stats">
+
+      <div class="stat">
+        <div class="stat-label">SOLVES</div>
+        <div class="stat-value" id="count">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">AVERAGE</div>
+        <div class="stat-value" id="average">--</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">AO5</div>
+        <div class="stat-value" id="ao5">--</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">BEST</div>
+        <div class="stat-value" id="best">--</div>
+      </div>
+
+    </section>
+
+    <section class="solves">
+
+      <h2>Recent Solves</h2>
+
+      <div id="solveList">
+        <p style="color:#999;font-size:14px;">No solves yet.</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    let running = false;
+    let startTime = 0;
+    let interval = null;
+    let solves = [];
+
+    const timerDisplay = document.getElementById("timer");
+
+    function formatTime(ms) {
+      return (ms / 1000).toFixed(2);
+    }
+
+    function startTimer() {
+      if (running) return;
+
+      running = true;
+      startTime = performance.now();
+
+      interval = setInterval(() => {
+        const elapsed = performance.now() - startTime;
+        timerDisplay.textContent = formatTime(elapsed);
+      }, 10);
+    }
+
+    function stopTimer() {
+      if (!running) return;
+
+      running = false;
+      clearInterval(interval);
+
+      const elapsed = performance.now() - startTime;
+      const time = Number(formatTime(elapsed));
+
+      timerDisplay.textContent = time.toFixed(2);
+
+      solves.unshift(time);
+
+      updateStats();
+      updateSolveList();
+
+      generateScramble();
+    }
+
+    function resetTimer() {
+      running = false;
+      clearInterval(interval);
+      timerDisplay.textContent = "0.00";
+    }
+
+    function average(arr) {
+      if (arr.length === 0) return null;
+
+      const total = arr.reduce((a, b) => a + b, 0);
+      return total / arr.length;
+    }
+
+    function calculateAverage() {
+      return average(solves);
+    }
+
+    function calculateAo5() {
+      if (solves.length < 5) return null;
+
+      const lastFive = solves.slice(0, 5).sort((a, b) => a - b);
+      lastFive.shift();
+      lastFive.pop();
+
+      return average(lastFive);
+    }
+
+    function updateStats() {
+      document.getElementById("count").textContent = solves.length;
+
+      const avg = calculateAverage();
+      document.getElementById("average").textContent =
+        avg ? avg.toFixed(2) : "--";
+
+      const ao5 = calculateAo5();
+      document.getElementById("ao5").textContent =
+        ao5 ? ao5.toFixed(2) : "--";
+
+      const best = solves.length
+        ? Math.min(...solves)
+        : null;
+
+      document.getElementById("best").textContent =
+        best ? best.toFixed(2) : "--";
+    }
+
+    function updateSolveList() {
+      const list = document.getElementById("solveList");
+
+      if (solves.length === 0) {
+        list.innerHTML =
+          '<p style="color:#999;font-size:14px;">No solves yet.</p>';
+        return;
+      }
+
+      list.innerHTML = solves
+        .slice(0, 15)
+        .map((time, index) => `
+          <div class="solve">
+            <span>#${solves.length - index}</span>
+            <strong>${time.toFixed(2)}</strong>
+          </div>
+        `)
+        .join("");
+    }
+
+    function generateScramble() {
+      const moves = ["R", "L", "U", "D", "F", "B"];
+      const modifiers = ["", "'", "2"];
+
+      let scramble = [];
+      let previous = "";
+
+      for (let i = 0; i < 20; i++) {
+
+        let move;
+
+        do {
+          move = moves[Math.floor(Math.random() * moves.length)];
+        } while (move === previous);
+
+        const modifier =
+          modifiers[Math.floor(Math.random() * modifiers.length)];
+
+        scramble.push(move + modifier);
+        previous = move;
+      }
+
+      document.getElementById("scramble").textContent =
+        scramble.join(" ");
+    }
+
+    document.addEventListener("keydown", (event) => {
+
+      if (event.code === "Space") {
+        event.preventDefault();
+
+        if (running) {
+          stopTimer();
+        } else {
+          startTimer();
+        }
+      }
+
+    });
+
+    generateScramble();
+  </script>
+
+</body>
+</html>
