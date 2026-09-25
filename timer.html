@@ -41,49 +41,76 @@
     main {
       max-width: 900px;
       margin: auto;
-      padding: 60px 20px;
+      padding: 50px 20px;
     }
 
-    .timer-section {
+    /* SCRAMBLE */
+
+    .scramble-area {
       text-align: center;
+      margin-bottom: 25px;
     }
 
     .scramble {
-      min-height: 50px;
+      min-height: 35px;
       font-size: 20px;
       color: #555;
       letter-spacing: 1px;
-      margin-bottom: 35px;
+      line-height: 1.6;
     }
 
-    .timer {
-      font-size: 100px;
-      font-weight: 700;
-      letter-spacing: -5px;
-      margin: 20px 0 30px;
+    .scramble-controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
     }
 
     button {
       border: 1px solid #ddd;
       background: white;
-      padding: 10px 18px;
-      border-radius: 9px;
+      padding: 8px 14px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     button:hover {
       border-color: #aaa;
     }
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
+    /* TIMER */
+
+    .timer-area {
+      text-align: center;
+      user-select: none;
     }
 
+    .timer {
+      font-size: 110px;
+      font-weight: 700;
+      letter-spacing: -6px;
+      margin: 30px 0 15px;
+    }
+
+    .timer.ready {
+      color: #22a447;
+    }
+
+    .timer.holding {
+      color: #e53935;
+    }
+
+    .instruction {
+      height: 24px;
+      color: #999;
+      font-size: 13px;
+    }
+
+    /* STATS */
+
     .stats {
-      margin-top: 70px;
+      margin-top: 65px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
@@ -98,7 +125,7 @@
 
     .stat-label {
       color: #888;
-      font-size: 12px;
+      font-size: 11px;
       margin-bottom: 8px;
     }
 
@@ -106,6 +133,8 @@
       font-size: 22px;
       font-weight: 700;
     }
+
+    /* SOLVES */
 
     .solves {
       margin-top: 30px;
@@ -115,9 +144,15 @@
       padding: 20px;
     }
 
+    .solves-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
     .solves h2 {
       font-size: 16px;
-      margin-bottom: 15px;
     }
 
     .solve {
@@ -134,11 +169,15 @@
 
     @media (max-width: 700px) {
       .timer {
-        font-size: 65px;
+        font-size: 70px;
       }
 
       .stats {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .scramble {
+        font-size: 16px;
       }
     }
   </style>
@@ -146,218 +185,451 @@
 
 <body>
 
-  <header>
-    <div class="logo">NorCal Cubers</div>
-    <a href="index.html">← Home</a>
-  </header>
+<header>
+  <div class="logo">NorCal Cubers</div>
+  <a href="index.html">← Home</a>
+</header>
 
-  <main>
+<main>
 
-    <section class="timer-section">
+  <section class="scramble-area">
 
-      <div class="scramble" id="scramble">
-        Click "Scramble" to get started
-      </div>
+    <div class="scramble" id="scramble"></div>
 
-      <button onclick="generateScramble()">New Scramble</button>
+    <div class="scramble-controls">
+      <button id="previousScramble">← Previous</button>
+      <button id="nextScramble">Next →</button>
+      <button id="newScramble">New</button>
+    </div>
 
-      <div class="timer" id="timer">0.00</div>
+  </section>
 
-      <div class="controls">
-        <button onclick="startTimer()">Start</button>
-        <button onclick="stopTimer()">Stop</button>
-        <button onclick="resetTimer()">Reset</button>
-      </div>
+  <section class="timer-area">
 
-    </section>
+    <div class="timer" id="timer">0.00</div>
 
-    <section class="stats">
+    <div class="instruction" id="instruction">
+      Hold SPACE to get ready
+    </div>
 
-      <div class="stat">
-        <div class="stat-label">SOLVES</div>
-        <div class="stat-value" id="count">0</div>
-      </div>
+  </section>
 
-      <div class="stat">
-        <div class="stat-label">AVERAGE</div>
-        <div class="stat-value" id="average">--</div>
-      </div>
+  <section class="stats">
 
-      <div class="stat">
-        <div class="stat-label">AO5</div>
-        <div class="stat-value" id="ao5">--</div>
-      </div>
+    <div class="stat">
+      <div class="stat-label">SOLVES</div>
+      <div class="stat-value" id="count">0</div>
+    </div>
 
-      <div class="stat">
-        <div class="stat-label">BEST</div>
-        <div class="stat-value" id="best">--</div>
-      </div>
+    <div class="stat">
+      <div class="stat-label">AVERAGE</div>
+      <div class="stat-value" id="average">--</div>
+    </div>
 
-    </section>
+    <div class="stat">
+      <div class="stat-label">AO5</div>
+      <div class="stat-value" id="ao5">--</div>
+    </div>
 
-    <section class="solves">
+    <div class="stat">
+      <div class="stat-label">BEST</div>
+      <div class="stat-value" id="best">--</div>
+    </div>
 
+  </section>
+
+  <section class="solves">
+
+    <div class="solves-header">
       <h2>Recent Solves</h2>
+      <button id="clearSolves">Clear</button>
+    </div>
 
-      <div id="solveList">
-        <p style="color:#999;font-size:14px;">No solves yet.</p>
-      </div>
+    <div id="solveList">
+      <p style="color:#999;font-size:14px;">No solves yet.</p>
+    </div>
 
-    </section>
+  </section>
 
-  </main>
+</main>
 
-  <script>
-    let running = false;
-    let startTime = 0;
-    let interval = null;
-    let solves = [];
+<script>
 
-    const timerDisplay = document.getElementById("timer");
+  /* =========================
+     TIMER
+  ========================= */
 
-    function formatTime(ms) {
-      return (ms / 1000).toFixed(2);
+  let timerRunning = false;
+  let timerHolding = false;
+  let startTime = 0;
+  let interval = null;
+
+  const timerDisplay = document.getElementById("timer");
+  const instruction = document.getElementById("instruction");
+
+  function formatTime(ms) {
+    return (ms / 1000).toFixed(2);
+  }
+
+  function updateTimer() {
+    if (!timerRunning) return;
+
+    const elapsed = performance.now() - startTime;
+    timerDisplay.textContent = formatTime(elapsed);
+  }
+
+  function startTimer() {
+
+    if (timerRunning) return;
+
+    timerRunning = true;
+    startTime = performance.now();
+
+    timerDisplay.classList.remove("ready");
+    timerDisplay.classList.remove("holding");
+
+    instruction.textContent = "Solving...";
+
+    interval = setInterval(updateTimer, 10);
+  }
+
+  function stopTimer() {
+
+    if (!timerRunning) return;
+
+    timerRunning = false;
+    clearInterval(interval);
+
+    const elapsed = performance.now() - startTime;
+    const time = Number(formatTime(elapsed));
+
+    timerDisplay.textContent = time.toFixed(2);
+
+    addSolve(time);
+
+    /*
+      Automatically move to the next scramble
+    */
+    nextScramble();
+
+    instruction.textContent = "Hold SPACE to get ready";
+  }
+
+
+  /*
+    HOLD SPACE → RED
+    KEEP HOLDING → GREEN
+    RELEASE → START
+  */
+
+  document.addEventListener("keydown", function(event) {
+
+    if (event.code !== "Space") return;
+
+    event.preventDefault();
+
+    /*
+      If timer is already running,
+      pressing space does nothing.
+    */
+    if (timerRunning) return;
+
+    /*
+      Ignore key repeat.
+    */
+    if (event.repeat) return;
+
+    timerHolding = true;
+
+    timerDisplay.classList.remove("ready");
+    timerDisplay.classList.add("holding");
+
+    instruction.textContent = "Keep holding...";
+
+    /*
+      Green after holding for 500ms
+    */
+    setTimeout(() => {
+
+      if (!timerHolding || timerRunning) return;
+
+      timerDisplay.classList.remove("holding");
+      timerDisplay.classList.add("ready");
+
+      instruction.textContent = "Release to start!";
+
+    }, 500);
+
+  });
+
+
+  document.addEventListener("keyup", function(event) {
+
+    if (event.code !== "Space") return;
+
+    event.preventDefault();
+
+    if (!timerHolding) {
+
+      /*
+        If timer was running,
+        space stops it.
+      */
+      if (timerRunning) {
+        stopTimer();
+      }
+
+      return;
     }
 
-    function startTimer() {
-      if (running) return;
+    timerHolding = false;
 
-      running = true;
-      startTime = performance.now();
-
-      interval = setInterval(() => {
-        const elapsed = performance.now() - startTime;
-        timerDisplay.textContent = formatTime(elapsed);
-      }, 10);
+    /*
+      If green, release starts timer.
+    */
+    if (timerDisplay.classList.contains("ready")) {
+      startTimer();
     }
 
-    function stopTimer() {
-      if (!running) return;
+    timerDisplay.classList.remove("holding");
+    timerDisplay.classList.remove("ready");
 
-      running = false;
-      clearInterval(interval);
+  });
 
-      const elapsed = performance.now() - startTime;
-      const time = Number(formatTime(elapsed));
 
-      timerDisplay.textContent = time.toFixed(2);
+  /* =========================
+     SCRAMBLES
+  ========================= */
 
-      solves.unshift(time);
+  let scrambleHistory = [];
+  let scrambleIndex = -1;
+
+  const moves = ["R", "L", "U", "D", "F", "B"];
+  const modifiers = ["", "'", "2"];
+
+
+  function createScramble() {
+
+    let scramble = [];
+    let previous = "";
+
+    for (let i = 0; i < 20; i++) {
+
+      let move;
+
+      do {
+        move = moves[Math.floor(Math.random() * moves.length)];
+      } while (move === previous);
+
+      const modifier =
+        modifiers[Math.floor(Math.random() * modifiers.length)];
+
+      scramble.push(move + modifier);
+
+      previous = move;
+    }
+
+    return scramble.join(" ");
+  }
+
+
+  function showScramble() {
+
+    if (scrambleHistory.length === 0) return;
+
+    document.getElementById("scramble").textContent =
+      scrambleHistory[scrambleIndex];
+
+    document.getElementById("previousScramble").disabled =
+      scrambleIndex <= 0;
+
+    document.getElementById("nextScramble").disabled =
+      scrambleIndex >= scrambleHistory.length - 1;
+
+  }
+
+
+  function newScramble() {
+
+    /*
+      If we're somewhere in history,
+      remove the old "future" scrambles.
+    */
+    if (scrambleIndex < scrambleHistory.length - 1) {
+      scrambleHistory =
+        scrambleHistory.slice(0, scrambleIndex + 1);
+    }
+
+    scrambleHistory.push(createScramble());
+
+    scrambleIndex = scrambleHistory.length - 1;
+
+    showScramble();
+  }
+
+
+  function nextScramble() {
+
+    /*
+      If there is already a scramble ahead,
+      simply move forward.
+    */
+    if (scrambleIndex < scrambleHistory.length - 1) {
+
+      scrambleIndex++;
+      showScramble();
+      return;
+
+    }
+
+    /*
+      Otherwise generate a new one.
+    */
+    newScramble();
+  }
+
+
+  function previousScramble() {
+
+    if (scrambleIndex > 0) {
+
+      scrambleIndex--;
+      showScramble();
+
+    }
+
+  }
+
+
+  document
+    .getElementById("previousScramble")
+    .addEventListener("click", previousScramble);
+
+  document
+    .getElementById("nextScramble")
+    .addEventListener("click", nextScramble);
+
+  document
+    .getElementById("newScramble")
+    .addEventListener("click", newScramble);
+
+
+  /* =========================
+     SOLVES + AVERAGES
+  ========================= */
+
+  let solves = [];
+
+  function average(numbers) {
+
+    if (numbers.length === 0) return null;
+
+    return numbers.reduce((a, b) => a + b, 0)
+      / numbers.length;
+
+  }
+
+
+  function calculateAo5() {
+
+    if (solves.length < 5) return null;
+
+    const lastFive = solves
+      .slice(0, 5)
+      .sort((a, b) => a - b);
+
+    /*
+      Remove fastest and slowest.
+    */
+    lastFive.shift();
+    lastFive.pop();
+
+    return average(lastFive);
+
+  }
+
+
+  function addSolve(time) {
+
+    solves.unshift(time);
+
+    updateStats();
+    updateSolveList();
+
+  }
+
+
+  function updateStats() {
+
+    document.getElementById("count").textContent =
+      solves.length;
+
+    const avg = average(solves);
+
+    document.getElementById("average").textContent =
+      avg ? avg.toFixed(2) : "--";
+
+
+    const ao5 = calculateAo5();
+
+    document.getElementById("ao5").textContent =
+      ao5 ? ao5.toFixed(2) : "--";
+
+
+    const best = solves.length
+      ? Math.min(...solves)
+      : null;
+
+    document.getElementById("best").textContent =
+      best ? best.toFixed(2) : "--";
+
+  }
+
+
+  function updateSolveList() {
+
+    const list = document.getElementById("solveList");
+
+    if (solves.length === 0) {
+
+      list.innerHTML =
+        '<p style="color:#999;font-size:14px;">No solves yet.</p>';
+
+      return;
+    }
+
+    list.innerHTML = solves
+      .slice(0, 20)
+      .map((time, index) => `
+        <div class="solve">
+          <span>#${solves.length - index}</span>
+          <strong>${time.toFixed(2)}</strong>
+        </div>
+      `)
+      .join("");
+
+  }
+
+
+  document
+    .getElementById("clearSolves")
+    .addEventListener("click", function() {
+
+      solves = [];
 
       updateStats();
       updateSolveList();
 
-      generateScramble();
-    }
-
-    function resetTimer() {
-      running = false;
-      clearInterval(interval);
-      timerDisplay.textContent = "0.00";
-    }
-
-    function average(arr) {
-      if (arr.length === 0) return null;
-
-      const total = arr.reduce((a, b) => a + b, 0);
-      return total / arr.length;
-    }
-
-    function calculateAverage() {
-      return average(solves);
-    }
-
-    function calculateAo5() {
-      if (solves.length < 5) return null;
-
-      const lastFive = solves.slice(0, 5).sort((a, b) => a - b);
-      lastFive.shift();
-      lastFive.pop();
-
-      return average(lastFive);
-    }
-
-    function updateStats() {
-      document.getElementById("count").textContent = solves.length;
-
-      const avg = calculateAverage();
-      document.getElementById("average").textContent =
-        avg ? avg.toFixed(2) : "--";
-
-      const ao5 = calculateAo5();
-      document.getElementById("ao5").textContent =
-        ao5 ? ao5.toFixed(2) : "--";
-
-      const best = solves.length
-        ? Math.min(...solves)
-        : null;
-
-      document.getElementById("best").textContent =
-        best ? best.toFixed(2) : "--";
-    }
-
-    function updateSolveList() {
-      const list = document.getElementById("solveList");
-
-      if (solves.length === 0) {
-        list.innerHTML =
-          '<p style="color:#999;font-size:14px;">No solves yet.</p>';
-        return;
-      }
-
-      list.innerHTML = solves
-        .slice(0, 15)
-        .map((time, index) => `
-          <div class="solve">
-            <span>#${solves.length - index}</span>
-            <strong>${time.toFixed(2)}</strong>
-          </div>
-        `)
-        .join("");
-    }
-
-    function generateScramble() {
-      const moves = ["R", "L", "U", "D", "F", "B"];
-      const modifiers = ["", "'", "2"];
-
-      let scramble = [];
-      let previous = "";
-
-      for (let i = 0; i < 20; i++) {
-
-        let move;
-
-        do {
-          move = moves[Math.floor(Math.random() * moves.length)];
-        } while (move === previous);
-
-        const modifier =
-          modifiers[Math.floor(Math.random() * modifiers.length)];
-
-        scramble.push(move + modifier);
-        previous = move;
-      }
-
-      document.getElementById("scramble").textContent =
-        scramble.join(" ");
-    }
-
-    document.addEventListener("keydown", (event) => {
-
-      if (event.code === "Space") {
-        event.preventDefault();
-
-        if (running) {
-          stopTimer();
-        } else {
-          startTimer();
-        }
-      }
-
     });
 
-    generateScramble();
-  </script>
+
+  /* =========================
+     START
+  ========================= */
+
+  newScramble();
+
+</script>
 
 </body>
 </html>
